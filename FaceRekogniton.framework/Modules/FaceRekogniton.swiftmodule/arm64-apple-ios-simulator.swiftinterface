@@ -1,0 +1,108 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios17.4-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -enable-bare-slash-regex -module-name FaceRekogniton
+import AWSRekognition
+import Combine
+import CryptoKit
+@_exported import FaceRekogniton
+import Foundation
+import Photos
+import Swift
+import UIKit
+import Vision
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public struct FaceImage : Codable, Hashable {
+  public var boundingBoxInBigImage: CGRect?
+  public var boundingBoxInOriginalImage: CGRect?
+  public var identifier: String
+  public var imageId: String?
+  public static func == (lhs: FaceImage, rhs: FaceImage) -> Bool
+  public init(from decoder: Decoder) throws
+  public func encode(to encoder: Encoder) throws
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension CGRect : Hashable {
+  public func hash(into hasher: inout Hasher)
+  public static func == (lhs: CGRect, rhs: CGRect) -> Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct FaceMatch : Codable, Hashable {
+  public let faceId: String
+  public var collageRect: String
+  public let collageImageId: String
+  public init(faceId: String, collageRect: AWSRekognitionBoundingBox, collageImageId: String)
+  public static func == (lhs: FaceMatch, rhs: FaceMatch) -> Bool
+  public func hash(into hasher: inout Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+@_Concurrency.MainActor public class FaceFinder : Sendable {
+  @_Concurrency.MainActor public init(accessKey: String, secretKey: String)
+  @_Concurrency.MainActor public func configure()
+  #if compiler(>=5.3) && $AsyncAwait
+  @_Concurrency.MainActor public func run(photos: [PHAsset], stream: Bool) async
+  #endif
+  @_Concurrency.MainActor public func getUsers() -> [FFUser]
+  #if compiler(>=5.3) && $AsyncAwait
+  @_Concurrency.MainActor public func getOriginalPhotos(matches: [String]) async -> [UIImage]
+  #endif
+  @_Concurrency.MainActor public func libraryObservable() -> PassthroughSubject<[FaceFinderAsset], Never>
+  #if compiler(>=5.3) && $AsyncAwait
+  @_Concurrency.MainActor public func getImage(from: AWSCompactRecord) async -> UIImage?
+  #endif
+  @_Concurrency.MainActor public func updateObservable() -> PassthroughSubject<Bool, Never>
+  #if compiler(>=5.3) && $AsyncAwait
+  @_Concurrency.MainActor public func clean() async
+  #endif
+  @objc deinit
+}
+public struct FFUser : Codable, Hashable {
+  public let face: AWSCompactRecord
+  public let name: String
+  public static func == (lhs: FFUser, rhs: FFUser) -> Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct FaceFinderAsset {
+  public let identifier: String
+  public let image: UIImage
+  public let object: PHAsset
+}
+public struct UltraRecord : Codable, Hashable {
+  public let main: FaceMatch
+  public let matchCount: Int
+  public init(main: FaceMatch, matchCount: Int)
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: FaceRekogniton.UltraRecord, b: FaceRekogniton.UltraRecord) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct AWSCompactRecord : Codable, Hashable {
+  public let main: FaceMatch
+  public let matches: [FaceMatch]
+  public init(main: FaceMatch, matches: [FaceMatch])
+  public func hash(into hasher: inout Hasher)
+  public static func == (lhs: AWSCompactRecord, rhs: AWSCompactRecord) -> Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}

@@ -1,0 +1,6 @@
+framework module FaceRekogniton {
+  umbrella header "FaceRekogniton.h"
+  export *
+
+  module * { export * }
+}
